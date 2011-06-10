@@ -68,12 +68,6 @@ public class QecGraphBuilderTest {
 			.edge(3, 8)
 			.edge(4, 9)
 			
-			.edge(0, 6)
-			.edge(1, 7)
-			.edge(2, 8)
-			.edge(3, 9)
-			.edge(4, 5)
-			
 			.edge(5, 6)
 			.edge(6, 7)
 			.edge(7, 8)
