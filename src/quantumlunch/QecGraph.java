@@ -15,11 +15,14 @@ public class QecGraph {
 	// triangular matrix: true means there is an edge.
 	// First row is of length 0, last is of length size - 1.
 	private final boolean[][] edges;
+	
+	private final int hashCode;
 
 	public QecGraph(int size, boolean[] blackNodes, boolean[][] edges) {
 		this.size = size;
 		this.blackNodes = blackNodes;
 		this.edges = edges;
+		this.hashCode = new HashCodeBuilder().append(blackNodes).append(edges).toHashCode();
 	}
 	
 	public int getSize() {
@@ -39,11 +42,12 @@ public class QecGraph {
 		}
 		return true;
 	}
+	
 	private int distanceToAllWhite() {
 		return new DistanceToAllWhiteCalculator().distanceToAllWhite(this);
 	}
 
-	private int minNeighbourCountForBlackNodes() {
+	int minNeighbourCountForBlackNodes() {
 		int min = Integer.MAX_VALUE;
 		for (int node = 0; node < size; node++) {
 			if (blackNodes[node]) {
@@ -58,23 +62,22 @@ public class QecGraph {
 
 	private int neighborCount(int node) {
 		int neighbours = 0;
-		for (int row = node + 1; row < size; row++) {
-			if (edges[row][node]) {
-				neighbours++;
-			}
-		}
-		for(int col = 0; col < node; col++) {
-			if (edges[node][col]) {
+		for(int col = 0; col < size; col++) {
+			if (edge(node, col)) {
 				neighbours++;
 			}
 		}
 		return neighbours;
 	}
+	
+	private boolean edge(int n1, int n2) {
+		if (n1 == n2) return false;
+		return (n1 > n2) ? edges[n1][n2] : edges[n2][n1];
+	}
 
-	// TODO: Cache this hashcode, but watch out for reflection computation (especially of equals)
 	@Override
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return hashCode;
 	}
 	
 	@Override

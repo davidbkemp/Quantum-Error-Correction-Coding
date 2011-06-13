@@ -1,13 +1,13 @@
 package quantumlunch;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static quantumlunch.QecGraphBuilder.qecGraph;
+
 import org.junit.Test;
 
 
-public class QecGraphBuilderTest {
-
+public class DistanceToAllWhiteCalculatorTest {
 	@Test
 	public void pentagonOfAllBlackShouldHaveDistanceOf3() throws Exception {
 		QecGraph qec = qecGraph(5).withBlackNodes(0, 1, 2, 3, 4)
@@ -18,7 +18,7 @@ public class QecGraphBuilderTest {
 			.edge(4, 0)
 			.build();
 		
-		assertThat(qec.distance(), is(3));
+		assertThat(new DistanceToAllWhiteCalculator().distanceToAllWhite(qec), is(3));
 	}
 	
 	@Test
@@ -31,8 +31,37 @@ public class QecGraphBuilderTest {
 			.edge(4, 0)
 			.build();
 		
-		assertThat(qec.distance(), is(2));
+		assertThat(new DistanceToAllWhiteCalculator().distanceToAllWhite(qec), is(2));
 	}
+	
+	@Test
+	public void hexagonOfAllBlackShouldHaveDistanceOf2() throws Exception {
+		QecGraph qec = qecGraph(6).withBlackNodes(0, 1, 2, 3, 4, 5)
+			.edge(0, 1)
+			.edge(1, 2)
+			.edge(2, 3)
+			.edge(3, 4)
+			.edge(4, 5)
+			.edge(5, 0)
+			.build();
+		
+		assertThat(new DistanceToAllWhiteCalculator().distanceToAllWhite(qec), is(2));
+	}
+	
+	@Test
+	public void hexagonOfAllBlackButOneShouldHaveDistanceOf2() throws Exception {
+		QecGraph qec = qecGraph(6).withBlackNodes(0, 1, 2, 3, 4)
+			.edge(0, 1)
+			.edge(1, 2)
+			.edge(2, 3)
+			.edge(3, 4)
+			.edge(4, 5)
+			.edge(5, 0)
+			.build();
+		
+		assertThat(new DistanceToAllWhiteCalculator().distanceToAllWhite(qec), is(2));
+	}
+	
 	
 	@Test
 	public void exampleOfDistanceFour() throws Exception {
@@ -50,7 +79,7 @@ public class QecGraphBuilderTest {
 			.edge(4, 9)
 			.build();
 		
-		assertThat(qec.distance(), is(4));
+		assertThat(new DistanceToAllWhiteCalculator().distanceToAllWhite(qec), is(4));
 	}
 	
 	@Test
@@ -68,6 +97,12 @@ public class QecGraphBuilderTest {
 			.edge(3, 8)
 			.edge(4, 9)
 			
+			.edge(0, 6)
+			.edge(1, 7)
+			.edge(2, 8)
+			.edge(3, 9)
+			.edge(4, 5)
+			
 			.edge(5, 6)
 			.edge(6, 7)
 			.edge(7, 8)
@@ -81,29 +116,6 @@ public class QecGraphBuilderTest {
 			.edge(9, 10)
 			.build();
 		
-		assertThat(qec.distance(), is(4));
-	}
-	
-	@Test
-	public void identicalGraphsHaveSameHashCode() throws Exception {
-		QecGraph qec1 = exampleQec().build();
-		QecGraph qec2 = exampleQec().build();
-		assertThat(qec1.hashCode(), is(qec2.hashCode()));
-	}
-	
-	@Test
-	public void identialGraphsAreEqual() throws Exception {
-		QecGraph qec1 = exampleQec().build();
-		QecGraph qec2 = exampleQec().build();
-		assertThat(qec1, is(qec2));
-	}
-
-	private QecGraphBuilder exampleQec() {
-		return qecGraph(5).withBlackNodes(0, 1, 2, 3, 4)
-			.edge(0, 1)
-			.edge(1, 2)
-			.edge(2, 3)
-			.edge(3, 4)
-			.edge(4, 0);
+		assertThat(new DistanceToAllWhiteCalculator().distanceToAllWhite(qec), is(5));
 	}
 }
