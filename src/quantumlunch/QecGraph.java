@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class QecGraph {
 
@@ -89,16 +88,18 @@ public class QecGraph {
     }
 
     int minNeighbourCountForBlackNodes() {
-        int min = Integer.MAX_VALUE - 1;
+        int min = Integer.MAX_VALUE;
+        boolean foundBlackNode = false;
         for (int node = 0; node < size; node++) {
             if (blackNodes[node]) {
                 int neighborCount = neighborCount(node);
                 if (neighborCount < min) {
                     min = neighborCount;
+                    foundBlackNode = true;
                 }
             }
         }
-        return min;
+        return foundBlackNode ? min : 0;
     }
 
     private int neighborCount(int node) {

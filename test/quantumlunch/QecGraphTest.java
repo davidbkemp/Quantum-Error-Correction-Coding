@@ -9,6 +9,13 @@ import org.junit.Test;
 public class QecGraphTest {
 
     @Test
+    public void allWhiteShouldHaveDistanceOfZeor() throws Exception {
+        QecGraph qec = qecGraph(2).build();
+        assertThat(qec.minNeighbourCountForBlackNodes(), is(0));
+        assertThat(qec.distance(), is(0));
+    }
+
+    @Test
     public void pentagonOfAllBlackShouldHaveDistanceOf3() throws Exception {
         QecGraph qec = qecGraph(5).withBlackNodes(0, 1, 2, 3, 4)
             .edge(0, 1)
