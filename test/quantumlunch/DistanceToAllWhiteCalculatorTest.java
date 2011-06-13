@@ -1,13 +1,13 @@
 package quantumlunch;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static quantumlunch.QecGraphBuilder.qecGraph;
+
 import org.junit.Test;
 
 
-public class QecGraphTest {
-
+public class DistanceToAllWhiteCalculatorTest {
     @Test
     public void pentagonOfAllBlackShouldHaveDistanceOf3() throws Exception {
         QecGraph qec = qecGraph(5).withBlackNodes(0, 1, 2, 3, 4)
@@ -18,8 +18,7 @@ public class QecGraphTest {
             .edge(4, 0)
             .build();
         
-        assertThat(qec.minNeighbourCountForBlackNodes(), is(2));
-        assertThat(qec.distance(), is(3));
+        assertThat(new DistanceToAllWhiteCalculator().distanceToAllWhite(qec), is(3));
     }
     
     @Test
@@ -32,8 +31,7 @@ public class QecGraphTest {
             .edge(4, 0)
             .build();
         
-        assertThat(qec.minNeighbourCountForBlackNodes(), is(2));
-        assertThat(qec.distance(), is(2));
+        assertThat(new DistanceToAllWhiteCalculator().distanceToAllWhite(qec), is(2));
     }
     
     @Test
@@ -47,8 +45,7 @@ public class QecGraphTest {
             .edge(5, 0)
             .build();
         
-        assertThat(qec.minNeighbourCountForBlackNodes(), is(2));
-        assertThat(qec.distance(), is(2));
+        assertThat(new DistanceToAllWhiteCalculator().distanceToAllWhite(qec), is(2));
     }
     
     @Test
@@ -62,8 +59,7 @@ public class QecGraphTest {
             .edge(5, 0)
             .build();
         
-        assertThat(qec.minNeighbourCountForBlackNodes(), is(2));
-        assertThat(qec.distance(), is(2));
+        assertThat(new DistanceToAllWhiteCalculator().distanceToAllWhite(qec), is(2));
     }
     
     
@@ -83,30 +79,7 @@ public class QecGraphTest {
             .edge(4, 9)
             .build();
         
-        assertThat(qec.minNeighbourCountForBlackNodes(), is(3));
-        assertThat(qec.distance(), is(4));
-    }
-     
-    @Test
-    public void identicalGraphsHaveSameHashCode() throws Exception {
-        QecGraph qec1 = exampleQec().build();
-        QecGraph qec2 = exampleQec().build();
-        assertThat(qec1.hashCode(), is(qec2.hashCode()));
-    }
-    
-    @Test
-    public void identialGraphsAreEqual() throws Exception {
-        QecGraph qec1 = exampleQec().build();
-        QecGraph qec2 = exampleQec().build();
-        assertThat(qec1, is(qec2));
+        assertThat(new DistanceToAllWhiteCalculator().distanceToAllWhite(qec), is(4));
     }
 
-    private QecGraphBuilder exampleQec() {
-        return qecGraph(5).withBlackNodes(0, 1, 2, 3, 4)
-            .edge(0, 1)
-            .edge(1, 2)
-            .edge(2, 3)
-            .edge(3, 4)
-            .edge(4, 0);
-    }
 }
