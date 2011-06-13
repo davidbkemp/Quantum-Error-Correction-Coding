@@ -1,5 +1,8 @@
 package quantumlunch;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -59,7 +62,26 @@ public class QecGraph {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        StringBuilder stringBuilder = new StringBuilder("QecGraph[size=")
+            .append(size)
+            .append(", blackNodes=[");
+        List<Integer> blackNodeList = new ArrayList<Integer>();
+        for(int i = 0; i < size; i++) {
+            if (blackNodes[i]) {
+                blackNodeList.add(i);
+            }
+        }
+        stringBuilder.append(blackNodeList)
+            .append(", edges=");
+        for(int row = 1; row < size; row++) {
+            for (int col = 0; col < row; col++) {
+                if (edge(row, col)) {
+                    stringBuilder.append(" (" + row + "," + col + ") ");
+                }
+            }
+        }
+        stringBuilder.append("]");
+        return stringBuilder.toString();
     }
 
     private int distanceToAllWhite() {
@@ -67,7 +89,7 @@ public class QecGraph {
     }
 
     int minNeighbourCountForBlackNodes() {
-        int min = Integer.MAX_VALUE;
+        int min = Integer.MAX_VALUE - 1;
         for (int node = 0; node < size; node++) {
             if (blackNodes[node]) {
                 int neighborCount = neighborCount(node);
