@@ -6,9 +6,6 @@ public class BestGraphFinder {
         int bestDistance = 0;
         QecGraph bestGraph = null;
         
-        // Bit string representing all nodes being black.
-        long allBlack = (1L << size) - 1;
-        
         int numberOfPossibleEdges = (size * (size - 1)) / 2;
         System.out.println("Number of possible edges: " + numberOfPossibleEdges);
         
@@ -16,10 +13,10 @@ public class BestGraphFinder {
         long fullyConnected = (1L << numberOfPossibleEdges) - 1;
         
         System.out.println("Number of edge permutations: " + fullyConnected);
-        for (long blackNodeBitPattern = 0; blackNodeBitPattern <= allBlack; blackNodeBitPattern++) {
+        for (int blackNodeCount = 1; blackNodeCount <= size; blackNodeCount++) {
             for (long edgeBitPattern = 0; edgeBitPattern <= fullyConnected; edgeBitPattern++) {
                 QecGraphBuilder graphBuilder = new QecGraphBuilder(size);
-                colourNodes(graphBuilder, size, blackNodeBitPattern);
+                colourNodes(graphBuilder, blackNodeCount);
                 addEdges(graphBuilder, size, edgeBitPattern);
                 QecGraph graph = graphBuilder.build();
                 int distance = graph.distance();
@@ -49,11 +46,9 @@ public class BestGraphFinder {
         return rowPattern << paddingSize;
     }
 
-    private void colourNodes(QecGraphBuilder graphBuilder, int size, long blackNodeBitPattern) {
-        for (int node = 0; node < size; node++) {
-            if ((blackNodeBitPattern & (1L << node)) != 0) {
-                graphBuilder.withBlackNodes(node);
-            }
+    private void colourNodes(QecGraphBuilder graphBuilder, int blackNodeCount) {
+        for (int node = 0; node < blackNodeCount; node++) {
+            graphBuilder.withBlackNodes(node);
         }
     }
 
