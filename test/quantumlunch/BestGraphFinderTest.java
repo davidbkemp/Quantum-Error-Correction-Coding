@@ -33,4 +33,10 @@ public class BestGraphFinderTest {
         System.out.println(graph);
         assertThat(graph.distance(), is(3));
     }
+//    @Test
+    public void bestGraphForSevenNodesShouldHaveDistanceThree() throws Exception {
+        QecGraph graph = new BestGraphFinder().findBestGraph(7);
+        System.out.println(graph);
+        assertThat(graph.distance(), is(3));
+    }
 }
