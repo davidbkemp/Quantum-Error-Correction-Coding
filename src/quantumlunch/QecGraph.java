@@ -56,7 +56,10 @@ public class QecGraph {
 
     @Override
     public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
+        if (obj == this) return true;
+        if (!(obj instanceof QecGraph)) return false;
+        QecGraph rhs = (QecGraph) obj;
+        return new EqualsBuilder().append(blackNodes, rhs.blackNodes).append(edges, rhs.edges).isEquals();
     }
 
     @Override
