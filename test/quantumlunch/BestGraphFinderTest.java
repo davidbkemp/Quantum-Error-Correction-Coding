@@ -26,14 +26,16 @@ public class BestGraphFinderTest {
         System.out.println(graph);
         assertThat(graph.distance(), is(3));
     }
-    
-    @Test
+
+    // Takes several minutes
+//    @Test
     public void bestGraphForSixNodesShouldHaveDistanceThree() throws Exception {
         QecGraph graph = new BestGraphFinder().findBestGraph(6);
         System.out.println(graph);
         assertThat(graph.distance(), is(3));
     }
     
+    //21577 seconds
 //    @Test
     public void bestGraphForSevenNodesShouldHaveDistanceThree() throws Exception {
         QecGraph graph = new BestGraphFinder().findBestGraph(7);

@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import quantumlunch.isomorphism.IsomorphismDescription;
+
 public class QecGraph {
 
     public static enum Operation {
@@ -23,11 +25,14 @@ public class QecGraph {
 
     private final int hashCode;
 
+    private final IsomorphismDescription isomorphismDescription;
+
     public QecGraph(int size, boolean[] blackNodes, boolean[][] edges) {
         this.size = size;
         this.blackNodes = blackNodes;
         this.edges = edges;
         this.hashCode = new HashCodeBuilder().append(blackNodes).append(edges).toHashCode();
+        this.isomorphismDescription = new IsomorphismDescription(this);
     }
 
     public int getSize() {
@@ -47,6 +52,49 @@ public class QecGraph {
             }
         }
         return true;
+    }
+    
+    public boolean isomorphicTo(QecGraph rhs) {
+        return isomorphismDescription.isomorphicTo(rhs.isomorphismDescription);
+    }
+    
+    public QecGraph transform(int node, Operation operation) {
+        boolean[] newBlackNodes = blackNodes.clone();
+        switch (operation) {
+        case X:
+            toggleNeighbours(node, newBlackNodes);
+            break;
+
+        case Y:
+            toggleNeighbours(node, newBlackNodes);
+            toggleNode(node, newBlackNodes);
+            break;
+
+        case Z:
+            toggleNode(node, newBlackNodes);
+            break;
+
+        default:
+            throw new IllegalStateException("Unknown op: " + operation);
+        }
+        return new QecGraph(size, newBlackNodes, edges);
+
+    }
+
+    public boolean isBlack(int node) {
+        return blackNodes[node];
+    }
+    public int getNumberOfBlackNodes() {
+        int result = 0;
+        for (boolean isBlack : blackNodes) {
+             if (isBlack) result++;
+        }
+        return result;
+    }
+
+    public boolean edge(int n1, int n2) {
+        if (n1 == n2) return false;
+        return (n1 > n2) ? edges[n1][n2] : edges[n2][n1];
     }
 
     @Override
@@ -113,35 +161,6 @@ public class QecGraph {
             }
         }
         return neighbours;
-    }
-
-    private boolean edge(int n1, int n2) {
-        if (n1 == n2)
-            return false;
-        return (n1 > n2) ? edges[n1][n2] : edges[n2][n1];
-    }
-
-    public QecGraph transform(int node, Operation operation) {
-        boolean[] newBlackNodes = blackNodes.clone();
-        switch (operation) {
-        case X:
-            toggleNeighbours(node, newBlackNodes);
-            break;
-
-        case Y:
-            toggleNeighbours(node, newBlackNodes);
-            toggleNode(node, newBlackNodes);
-            break;
-
-        case Z:
-            toggleNode(node, newBlackNodes);
-            break;
-
-        default:
-            throw new IllegalStateException("Unknown op: " + operation);
-        }
-        return new QecGraph(size, newBlackNodes, edges);
-
     }
 
     private void toggleNeighbours(int node, boolean[] newBlackNodes) {
