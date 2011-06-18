@@ -1,6 +1,7 @@
 package quantumlunch.isomorphism;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertThat;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -85,6 +86,8 @@ public class IsomorphismCalculator {
 
     private boolean nodesCanBeMapped(IsomorphismCalculator rhs, Map<Integer, Integer> mapping, Set<Integer> mappedLhsNodes, Set<Integer> mappedRhsNodes,
                                      Set<Integer> leadingEdgeNodes) {
+        assert mapping.size() == mappedLhsNodes.size() && mapping.size() == mappedRhsNodes.size():
+                String.format("Mapping sizes are different: %s, %s, %s", mapping.size(), mappedLhsNodes.size(), mappedRhsNodes.size());
         if (mapping.size() == size) return true;
         Integer node = chooseNode(mappedLhsNodes, leadingEdgeNodes);
         mappedLhsNodes.add(node);
@@ -98,7 +101,7 @@ public class IsomorphismCalculator {
             if (nodesCanBeMapped(rhs, mapping, mappedLhsNodes, mappedRhsNodes, newLeadingEdgeNodes)) {
                 return true;
             }
-            mapping.remove(rhsNode);
+            mapping.remove(node);
             mappedRhsNodes.remove(rhsNode);
         }
         mappedLhsNodes.remove(node);
