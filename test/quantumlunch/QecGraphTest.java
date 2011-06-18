@@ -1,9 +1,13 @@
 package quantumlunch;
 
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static quantumlunch.QecGraphBuilder.qecGraph;
 import org.junit.Test;
+
+import java.util.*;
 
 
 public class QecGraphTest {
@@ -106,6 +110,22 @@ public class QecGraphTest {
         QecGraph qec1 = exampleQec().build();
         QecGraph qec2 = exampleQec().build();
         assertThat(qec1, is(qec2));
+    }
+
+    @Test
+    public void neighboursReturnsNeighbours() throws Exception {
+        QecGraph graph = qecGraph(4).edge(0, 1).edge(0, 2).edge(1, 2).build();
+        assertThat(asSet(graph.neighbours(0)), is(asSet(1, 2)));
+        assertThat(asSet(graph.neighbours(1)), is(asSet(0, 2)));
+        assertThat(asSet(graph.neighbours(2)), is(asSet(1, 0)));
+    }
+
+    private Set<Integer> asSet(Integer... values) {
+        return asSet(Arrays.<Integer>asList(values));
+    }
+
+    private Set<Integer> asSet(Collection<Integer> integers) {
+        return new HashSet<Integer>(integers);
     }
 
     private QecGraphBuilder exampleQec() {

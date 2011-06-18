@@ -1,12 +1,13 @@
 package quantumlunch;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-import quantumlunch.isomorphism.IsomorphismDescription;
+import quantumlunch.isomorphism.IsomorphismCalculator;
 
 public class QecGraph {
 
@@ -25,14 +26,14 @@ public class QecGraph {
 
     private final int hashCode;
 
-    private final IsomorphismDescription isomorphismDescription;
+    private final IsomorphismCalculator isomorphismCalculator;
 
     public QecGraph(int size, boolean[] blackNodes, boolean[][] edges) {
         this.size = size;
         this.blackNodes = blackNodes;
         this.edges = edges;
         this.hashCode = new HashCodeBuilder().append(blackNodes).append(edges).toHashCode();
-        this.isomorphismDescription = new IsomorphismDescription(this);
+        this.isomorphismCalculator = new IsomorphismCalculator(this);
     }
 
     public int getSize() {
@@ -55,7 +56,7 @@ public class QecGraph {
     }
     
     public boolean isomorphicTo(QecGraph rhs) {
-        return isomorphismDescription.isomorphicTo(rhs.isomorphismDescription);
+        return isomorphismCalculator.isomorphicTo(rhs.isomorphismCalculator);
     }
     
     public QecGraph transform(int node, Operation operation) {
@@ -95,6 +96,15 @@ public class QecGraph {
     public boolean edge(int n1, int n2) {
         if (n1 == n2) return false;
         return (n1 > n2) ? edges[n1][n2] : edges[n2][n1];
+    }
+
+    public Collection<Integer> neighbours(Integer node) {
+        // TODO: Might be better if the graph were represented using maps and lists.
+        List<Integer> neighbours = new ArrayList<Integer>();
+        for(int n = 0; n < size; n++) {
+            if (edge(node, n)) neighbours.add(n);
+        }
+        return neighbours;
     }
 
     @Override
