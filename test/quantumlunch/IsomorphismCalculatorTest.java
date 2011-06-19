@@ -77,12 +77,14 @@ public class IsomorphismCalculatorTest {
         IsomorphismCalculator calculator1 = new IsomorphismCalculator(qec1);
         IsomorphismCalculator calculator2 = new IsomorphismCalculator(qec2);
         assertThat(calculator2.isomorphicTo(calculator1), is(true));
+        assertThat(calculator1.isomorphicTo(calculator2), is(true));
         assertThat(calculator1.isomorphismHashCode(), is(calculator2.isomorphismHashCode()));
     }
 
     private void assertAreNotIsomorphic(QecGraph qec1, QecGraph qec2) {
         IsomorphismCalculator calculator1 = new IsomorphismCalculator(qec1);
         IsomorphismCalculator calculator2 = new IsomorphismCalculator(qec2);
+        assertThat(calculator1.isomorphicTo(calculator2), is(false));
         assertThat(calculator2.isomorphicTo(calculator1), is(false));
     }
 }

@@ -1,41 +1,38 @@
 package quantumlunch.isomorphism;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertThat;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import quantumlunch.QecGraph;
 
 import java.util.*;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import quantumlunch.QecGraph;
-
-// Warning: Not thread safe.
+// Not Thread safe.
 public class IsomorphismCalculator {
 
     private final QecGraph qecGraph;
     private final int size;
 
-    // NOTE: These are lazily populated and hence not thread safe.
+    // Warning: These are all lazily calculated.
     private int numberOfBlackNodes = -1;
     private Map<NodeCharacterisation, Set<Integer>> characterisationToNodesMapping;
     private Map<Integer, NodeCharacterisation> nodeToCharacterisationMapping;
+    private int isomorphicHashCode;
 
     public IsomorphismCalculator(QecGraph qecGraph) {
         this.qecGraph = qecGraph;
-        this.size = qecGraph.getSize();
-        numberOfBlackNodes = qecGraph.getNumberOfBlackNodes();
+        size = qecGraph.getSize();
     }
 
     public boolean isomorphicTo(IsomorphismCalculator rhs) {
+        assert mappingInvariantsSatisfied() : "Bug detected.  Should never happen";
         return size == rhs.size
-                && numberOfBlackNodes == rhs.numberOfBlackNodes
+                && getNumberOfBlackNodes() == rhs.getNumberOfBlackNodes()
                 && characterisationSetSizesMatch(rhs)
                 && nodesCanBeMapped(rhs);
     }
 
-    private void populateCharacterisationMappings() {
-        if (characterisationToNodesMapping != null) return;
-        characterisationToNodesMapping = new HashMap<NodeCharacterisation, Set<Integer>>();
+    private Map<NodeCharacterisation, Set<Integer>> createCharacterisationMappings() {
+        Map<NodeCharacterisation, Set<Integer>> mapping = new HashMap<NodeCharacterisation, Set<Integer>>();
         for (int node = 0; node < size; node++) {
             int blackNeighbourCount = 0;
             int whiteNeighbourCount = 0;
@@ -48,25 +45,24 @@ public class IsomorphismCalculator {
                     }
                 }
             }
-            addToCharacterisationMappings(node, qecGraph.isBlack(node), blackNeighbourCount, whiteNeighbourCount);
+            addToCharacterisationMappings(mapping, node, qecGraph.isBlack(node), blackNeighbourCount, whiteNeighbourCount);
         }
+        return mapping;
     }
 
-    private void addToCharacterisationMappings(Integer node, boolean isBlack, int blackNeighbours, int whiteNeighbours) {
+    private void addToCharacterisationMappings(Map<NodeCharacterisation, Set<Integer>> mapping, Integer node, boolean isBlack, int blackNeighbours, int whiteNeighbours) {
         NodeCharacterisation nodeCharacterisation = new NodeCharacterisation(isBlack, whiteNeighbours, blackNeighbours);
-        Set<Integer> nodes = characterisationToNodesMapping.get(nodeCharacterisation);
+        Set<Integer> nodes = mapping.get(nodeCharacterisation);
         if (nodes == null) {
             nodes = new HashSet<Integer>();
-            characterisationToNodesMapping.put(nodeCharacterisation, nodes);
+            mapping.put(nodeCharacterisation, nodes);
         }
         nodes.add(node);
     }
 
     private boolean characterisationSetSizesMatch(IsomorphismCalculator rhs) {
-        populateCharacterisationMappings();
-        rhs.populateCharacterisationMappings();
-        for (Entry<NodeCharacterisation, Set<Integer>> entry : characterisationToNodesMapping.entrySet()) {
-            Set<Integer> rhsSet = rhs.characterisationToNodesMapping.get(entry.getKey());
+        for (Entry<NodeCharacterisation, Set<Integer>> entry : getCharacterisationToNodesMapping().entrySet()) {
+            Set<Integer> rhsSet = rhs.getCharacterisationToNodesMapping().get(entry.getKey());
             if (rhsSet == null || entry.getValue().size() != rhsSet.size()) {
                 return false;
             }
@@ -75,8 +71,6 @@ public class IsomorphismCalculator {
     }
 
     private boolean nodesCanBeMapped(IsomorphismCalculator rhs) {
-        createNodeToCharacterisationMapping();
-        rhs.createNodeToCharacterisationMapping();
         Map<Integer, Integer> mapping = new HashMap<Integer, Integer>();
         Set<Integer> mappedLhsNodes = new HashSet<Integer>();
         Set<Integer> mappedRhsNodes = new HashSet<Integer>();
@@ -88,6 +82,7 @@ public class IsomorphismCalculator {
                                      Set<Integer> leadingEdgeNodes) {
         assert mapping.size() == mappedLhsNodes.size() && mapping.size() == mappedRhsNodes.size():
                 String.format("Mapping sizes are different: %s, %s, %s", mapping.size(), mappedLhsNodes.size(), mappedRhsNodes.size());
+        assert mappingInvariantsSatisfied() : "Bug detected.  Should never happen";
         if (mapping.size() == size) return true;
         Integer node = chooseNode(mappedLhsNodes, leadingEdgeNodes);
         mappedLhsNodes.add(node);
@@ -99,12 +94,14 @@ public class IsomorphismCalculator {
             mapping.put(node, rhsNode);
             mappedRhsNodes.add(rhsNode);
             if (nodesCanBeMapped(rhs, mapping, mappedLhsNodes, mappedRhsNodes, newLeadingEdgeNodes)) {
+                assert mappingInvariantsSatisfied() : "Bug detected.  Should never happen";
                 return true;
             }
             mapping.remove(node);
             mappedRhsNodes.remove(rhsNode);
         }
         mappedLhsNodes.remove(node);
+        assert mappingInvariantsSatisfied() : "Bug detected.  Should never happen";
         return false;
     }
 
@@ -136,8 +133,8 @@ public class IsomorphismCalculator {
     }
 
     private Set<Integer> findCandidateMappingsBasedOnNodeCharacterisation(Integer node, IsomorphismCalculator rhs) {
-        NodeCharacterisation nodeCharacterisation = nodeToCharacterisationMapping.get(node);
-        return rhs.characterisationToNodesMapping.get(nodeCharacterisation);
+        NodeCharacterisation nodeCharacterisation = getNodeToCharacterisationMapping().get(node);
+        return new HashSet<Integer>(rhs.getCharacterisationToNodesMapping().get(nodeCharacterisation));
     }
 
     private Integer chooseNode(Set<Integer> mappedLhsNodes, Set<Integer> leadingEdgeNodes) {
@@ -150,21 +147,48 @@ public class IsomorphismCalculator {
         throw new IllegalStateException("Buggy Code.  Should never reach this line!");
     }
 
-    private void createNodeToCharacterisationMapping() {
-        if (nodeToCharacterisationMapping != null) return;
-        nodeToCharacterisationMapping = new HashMap<Integer, NodeCharacterisation>();
-        for (Entry<NodeCharacterisation, Set<Integer>> entry : characterisationToNodesMapping.entrySet()) {
+    private Map<Integer, NodeCharacterisation> createNodeToCharacterisationMapping() {
+        Map<Integer, NodeCharacterisation> mapping = new HashMap<Integer, NodeCharacterisation>();
+        for (Entry<NodeCharacterisation, Set<Integer>> entry : getCharacterisationToNodesMapping().entrySet()) {
             NodeCharacterisation characterisation = entry.getKey();
             for (Integer node : entry.getValue()) {
-                nodeToCharacterisationMapping.put(node, characterisation);
+                mapping.put(node, characterisation);
             }
         }
-        assert nodeToCharacterisationMapping.size() == size : "Bug detected.  Should never happen";
+        return mapping;
+    }
+
+    private boolean mappingInvariantsSatisfied() {
+        int mappedCount = 0;
+        for (Entry<NodeCharacterisation, Set<Integer>> entry : getCharacterisationToNodesMapping().entrySet()) {
+            mappedCount += entry.getValue().size();
+        }
+        return mappedCount == size && getNodeToCharacterisationMapping().size() == size;
+    }
+
+    private int calculateIsomorphismHashCode() {
+        assert getNumberOfBlackNodes() >= 0 && getCharacterisationToNodesMapping() != null : "Buggy code.  Not initialized properly";
+        assert mappingInvariantsSatisfied() : "Bug detected.  Should never happen";
+        return new HashCodeBuilder().append(getNumberOfBlackNodes()).append(getCharacterisationToNodesMapping().keySet()).toHashCode();
     }
 
     public int isomorphismHashCode() {
-        populateCharacterisationMappings();;
-        assert numberOfBlackNodes >= 0 && characterisationToNodesMapping != null : "Buggy code.  Not initialized properly";
-        return new HashCodeBuilder().append(numberOfBlackNodes).append(characterisationToNodesMapping.keySet()).toHashCode();
+        if (isomorphicHashCode == 0) isomorphicHashCode = calculateIsomorphismHashCode();
+        return isomorphicHashCode;
+    }
+
+    private Map<NodeCharacterisation, Set<Integer>> getCharacterisationToNodesMapping() {
+        if (characterisationToNodesMapping == null) characterisationToNodesMapping = createCharacterisationMappings();
+        return characterisationToNodesMapping;
+    }
+
+    private Map<Integer, NodeCharacterisation> getNodeToCharacterisationMapping() {
+        if (nodeToCharacterisationMapping == null) nodeToCharacterisationMapping = createNodeToCharacterisationMapping();
+        return nodeToCharacterisationMapping;
+    }
+
+    private int getNumberOfBlackNodes() {
+        if (numberOfBlackNodes < 0) numberOfBlackNodes = qecGraph.getNumberOfBlackNodes();
+        return numberOfBlackNodes;
     }
 }

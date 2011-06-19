@@ -44,4 +44,14 @@ public class NodeCharacterisation {
             .append(numberOfWhiteNeighbours, rhs.numberOfWhiteNeighbours)
             .isEquals();
     }
+
+    @Override
+    public String toString() {
+        return "NodeCharacterisation{" +
+                "black=" + black +
+                ", numberOfWhiteNeighbours=" + numberOfWhiteNeighbours +
+                ", numberOfBlackNeighbours=" + numberOfBlackNeighbours +
+                ", hashCode=" + hashCode +
+                '}';
+    }
 }

@@ -110,6 +110,7 @@ public class QecGraph {
     @Override
     public int hashCode() {
         return hashCode;
+//        return isomorphismCalculator.isomorphismHashCode();
     }
 
     @Override
@@ -118,13 +119,14 @@ public class QecGraph {
         if (!(obj instanceof QecGraph)) return false;
         QecGraph rhs = (QecGraph) obj;
         return new EqualsBuilder().append(blackNodes, rhs.blackNodes).append(edges, rhs.edges).isEquals();
+//                || isomorphicTo(rhs);
     }
 
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("QecGraph[size=")
             .append(size)
-            .append(", blackNodes=[");
+            .append(", blackNodes=");
         List<Integer> blackNodeList = new ArrayList<Integer>();
         for(int i = 0; i < size; i++) {
             if (blackNodes[i]) {
