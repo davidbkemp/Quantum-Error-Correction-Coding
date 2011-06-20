@@ -1,13 +1,15 @@
 package quantumlunch;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-import static quantumlunch.QecGraphBuilder.qecGraph;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static quantumlunch.QecGraphBuilder.qecGraph;
 
 
 public class QecGraphTest {

@@ -1,12 +1,12 @@
 package quantumlunch;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.*;
-import static quantumlunch.QecGraphBuilder.qecGraph;
-
 import org.junit.Test;
 import quantumlunch.isomorphism.IsomorphismCalculator;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
+import static quantumlunch.QecGraphBuilder.qecGraph;
 
 
 public class IsomorphismCalculatorTest {

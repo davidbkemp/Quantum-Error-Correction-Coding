@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Quantum Error Correction Graphs    
+     ====================================================================== -->
+<project name="Quantum Error Correction Graphs" default="publish">
+    <description>
+        Quantum Error Correction Graphs
+    </description>
+
+    <property name="reports.tests" value="target/junit-report"/>
+
+    <target name="publish" depends="unit-tests, jar" description="Build, run tests, and create jar"/>
+
+    <target name="-define-paths">
+        <path id="compile.classpath">
+            <fileset dir="lib">
+                <include name="**/*.jar"/>
+            </fileset>
+        </path>
+        <path id="compile.test.classpath">
+            <fileset dir="lib">
+                <include name="**/*.jar"/>
+            </fileset>
+            <fileset dir="lib-test">
+                <include name="**/*.jar"/>
+            </fileset>
+            <path location="target/classes" />
+        </path>
+    </target>
+
+    <target name="-compile-steps" depends="-define-paths">
+        <mkdir dir="target/classes"/>
+        <mkdir dir="target/test-classes"/>
+        <javac srcdir="src" destdir="target/classes" classpathref="compile.classpath" encoding="UTF-8"/>
+        <javac srcdir="test" destdir="target/test-classes" classpathref="compile.test.classpath" encoding="UTF-8"/>
+    </target>
+
+    <target name="unit-tests" depends="-compile-steps" description="Run the unit tests.">
+        <mkdir dir="${reports.tests}"/>
+        <junit haltonfailure="true" printsummary="true" showoutput="true">
+            <classpath>
+                <pathelement location="target/classes"/>
+                <pathelement location="target/test-classes"/>
+                <path refid="compile.test.classpath"/>
+            </classpath>
+            <assertions>
+                <enable/>
+            </assertions>
+            <formatter type="xml"/>
+            <batchtest fork="no" todir="${reports.tests}">
+                <fileset dir="test">
+                    <include name="**/*Test.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="jar" depends="-compile-steps" description="Compile and create jar">
+        <jar destfile="target/qecgraphs.jar" basedir="target/classes"/>
+    </target>
+
+    <target name="clean" description="Delete all generated artifacts">
+        <delete dir="${basedir}/target"/>
+    </target>
+
+</project>
