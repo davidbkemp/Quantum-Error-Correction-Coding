@@ -36,8 +36,7 @@ class DistanceToAllWhiteCalculator {
             Operation operation) {
         for (int node = 0; node < graph.getSize(); node++) {
             QecGraph newGraph = graph.transform(node, operation);
-            if (!visitedGraphs.contains(newGraph)) {
-                visitedGraphs.add(newGraph);
+            if (visitedGraphs.add(newGraph)) {
                 nextGraphs.add(newGraph);
             }
         }

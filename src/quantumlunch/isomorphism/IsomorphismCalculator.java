@@ -169,7 +169,7 @@ public class IsomorphismCalculator {
     private int calculateIsomorphismHashCode() {
         assert getNumberOfBlackNodes() >= 0 && getCharacterisationToNodesMapping() != null : "Buggy code.  Not initialized properly";
         assert mappingInvariantsSatisfied() : "Bug detected.  Should never happen";
-        return new HashCodeBuilder().append(getNumberOfBlackNodes()).append(getCharacterisationToNodesMapping().keySet()).toHashCode();
+        return 31 * getNumberOfBlackNodes() + getCharacterisationToNodesMapping().keySet().hashCode();
     }
 
     public int isomorphismHashCode() {
