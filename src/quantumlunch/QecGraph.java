@@ -23,15 +23,12 @@ public class QecGraph {
     // First row is of length 0, last is of length size - 1.
     private final boolean[][] edges;
 
-    private final int hashCode;
-
     private final IsomorphismCalculator isomorphismCalculator;
 
     public QecGraph(int size, boolean[] blackNodes, boolean[][] edges) {
         this.size = size;
         this.blackNodes = blackNodes;
         this.edges = edges;
-        this.hashCode = new HashCodeBuilder().append(blackNodes).append(edges).toHashCode();
         this.isomorphismCalculator = new IsomorphismCalculator(this);
     }
 
@@ -108,8 +105,7 @@ public class QecGraph {
 
     @Override
     public int hashCode() {
-        return hashCode;
-//        return isomorphismCalculator.isomorphismHashCode();
+        return isomorphismCalculator.isomorphismHashCode();
     }
 
     @Override
@@ -117,8 +113,8 @@ public class QecGraph {
         if (obj == this) return true;
         if (!(obj instanceof QecGraph)) return false;
         QecGraph rhs = (QecGraph) obj;
-        return new EqualsBuilder().append(blackNodes, rhs.blackNodes).append(edges, rhs.edges).isEquals();
-//                || isomorphicTo(rhs);
+        return new EqualsBuilder().append(blackNodes, rhs.blackNodes).append(edges, rhs.edges).isEquals()
+                || isomorphicTo(rhs);
     }
 
     @Override

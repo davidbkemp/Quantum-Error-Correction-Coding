@@ -1,10 +1,14 @@
 package quantumlunch;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class BestGraphFinder {
 
     public QecGraph findBestGraph(int size) {
         int bestDistance = 0;
         QecGraph bestGraph = null;
+        Set<QecGraph> graphsTried = new HashSet<QecGraph>();
         
         int numberOfPossibleEdges = (size * (size - 1)) / 2;
         System.out.println("Number of possible edges: " + numberOfPossibleEdges);
@@ -19,10 +23,12 @@ public class BestGraphFinder {
                 colourNodes(graphBuilder, blackNodeCount);
                 addEdges(graphBuilder, size, edgeBitPattern);
                 QecGraph graph = graphBuilder.build();
-                int distance = graph.distance();
-                if (distance > bestDistance) {
-                    bestDistance = distance;
-                    bestGraph = graph;
+                if (graphsTried.add(graph)) {
+                    int distance = graph.distance();
+                    if (distance > bestDistance) {
+                        bestDistance = distance;
+                        bestGraph = graph;
+                    }
                 }
             }
         }
