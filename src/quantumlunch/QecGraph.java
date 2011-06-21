@@ -1,7 +1,6 @@
 package quantumlunch;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import quantumlunch.isomorphism.IsomorphismCalculator;
 
 import java.util.ArrayList;
@@ -37,7 +36,14 @@ public class QecGraph {
     }
 
     public int distance() {
+        return distance(0);
+    }
+
+    // Filtered distance: terminate early and return 0 if the distance based on neighbor counts indicates that the distance cannot possibly be
+    // more than the filter value.
+    public int distance(int filter) {
         int distanceBasedOnNeighbourCounts = minNeighbourCountForBlackNodes() + 1;
+        if (filter >= distanceBasedOnNeighbourCounts) return 0;
         int distanceToAllWhite = distanceToAllWhite();
         return distanceToAllWhite < distanceBasedOnNeighbourCounts ? distanceToAllWhite : distanceBasedOnNeighbourCounts;
     }

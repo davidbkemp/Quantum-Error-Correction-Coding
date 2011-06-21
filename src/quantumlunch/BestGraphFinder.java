@@ -24,7 +24,7 @@ public class BestGraphFinder {
                 addEdges(graphBuilder, size, edgeBitPattern);
                 QecGraph graph = graphBuilder.build();
                 if (graphsTried.add(graph)) {
-                    int distance = graph.distance();
+                    int distance = graph.distance(bestDistance);
                     if (distance > bestDistance) {
                         bestDistance = distance;
                         bestGraph = graph;
