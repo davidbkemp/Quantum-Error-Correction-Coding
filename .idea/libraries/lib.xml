@@ -3,10 +3,14 @@
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/commons-lang-2.6.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib-test/junit-4.8.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-test/mockito-all-1.8.5.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/lib/commons-lang-2.6-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-test/mockito-1.8.5.zip!/" />
+      <root url="jar://$PROJECT_DIR$/lib-test/junit4.8.2.zip!/junit4.8.2/temp.hamcrest.source" />
+      <root url="jar://$PROJECT_DIR$/lib-test/junit4.8.2.zip!/junit4.8.2" />
     </SOURCES>
   </library>
 </component>
