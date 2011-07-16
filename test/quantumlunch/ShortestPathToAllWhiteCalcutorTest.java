@@ -116,10 +116,5 @@ public class ShortestPathToAllWhiteCalcutorTest {
         
         assertThat(new ShortestPathToAllWhiteCalcutor().shortestPathToAllWhite(qec).size(), is(5));
     }
-    
-    private void printPath(List<QecGraph> path) {
-        for (QecGraph qecGraph : path) {
-            System.out.println(qecGraph);
-        }
-    }
+
 }

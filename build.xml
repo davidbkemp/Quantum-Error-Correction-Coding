@@ -63,4 +63,16 @@
         <delete dir="${basedir}/target"/>
     </target>
 
+    <target name="bestgraph" depends="jar"
+            description="Find the best graph. Use with, for example, -Dsize=5 -Dminimum=3">
+        <java fork="true" classname="quantumlunch.bestgraph.semibruteforce.BestGraphFinder"
+              failonerror="true" maxmemory="1024m">
+            <classpath>
+                <path location="target/qecgraphs.jar" />
+                <path refid="compile.classpath"/>
+            </classpath>
+            <arg value="${size}"/>
+            <arg value="${minimum}"/>
+        </java>
+    </target>
 </project>

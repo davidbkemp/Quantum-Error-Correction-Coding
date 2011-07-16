@@ -7,6 +7,26 @@ import java.util.Set;
 
 public class BestGraphFinder {
 
+    public static void main(String[] args) {
+        if (args.length != 2) {
+            usage();
+            System.exit(1);
+        }
+        try {
+            int size = Integer.parseInt(args[0]);
+            int minDistance = Integer.parseInt(args[1]);
+            System.out.println(new BestGraphFinder().findBestGraph(size, minDistance));
+
+        } catch (NumberFormatException e) {
+            usage();
+            System.exit(1);
+        }
+    }
+
+    private static void usage() {
+        System.err.println("BestGraph needs two arguments: graph size and minimum expected distance.");
+    }
+
     /**
      * Find a graph with the maximum distance having a specified number of nodes.
      *
