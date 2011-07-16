@@ -8,59 +8,68 @@ import static quantumlunch.bestgraph.semibruteforce.FixedValueSource.fixedValue;
 
 public class IntegerEnumeratorTest {
     @Test
-    public void valueShouldInitiallyBeZeoro() throws Exception {
+    public void valueShouldInitiallyDefaultToZeoro() throws Exception {
         IntegerEnumerator integerEnumerator = new IntegerEnumerator(fixedValue(5));
-        assertThat(integerEnumerator.value(), is(0L));
+        assertThat(integerEnumerator.value(), is(0));
+    }
+    
+    @Test
+    public void valueShouldInitiallyEqualSuppliedMinimum() throws Exception {
+        IntegerEnumerator integerEnumerator = new IntegerEnumerator(fixedValue(3), fixedValue(5));
+        assertThat(integerEnumerator.value(), is(3));
     }
 
     @Test
     public void advanceShouldIncrementValue() throws Exception {
         IntegerEnumerator integerEnumerator = new IntegerEnumerator(fixedValue(5));
         assertThat(integerEnumerator.advance(), is(true));
-        assertThat(integerEnumerator.value(), is(1L));
+        assertThat(integerEnumerator.value(), is(1));
     }
 
     @Test
-    public void advanceShouldBeLimitedByUpperLimitAndResetToZero() throws Exception {
-        IntegerEnumerator integerEnumerator = new IntegerEnumerator(fixedValue(2));
+    public void advanceShouldBeLimitedByUpperLimitAndResetToMinimum() throws Exception {
+        IntegerEnumerator integerEnumerator = new IntegerEnumerator(fixedValue(2), fixedValue(4));
         assertThat(integerEnumerator.advance(), is(true));
         assertThat(integerEnumerator.advance(), is(true));
         assertThat(integerEnumerator.advance(), is(false));
-        assertThat(integerEnumerator.value(), is(0L));
+        assertThat(integerEnumerator.value(), is(2));
     }
 
     @Test
-    public void advanceShouldBeLimitedByNextIntegerEnumeratorValue() throws Exception {
-        IntegerEnumerator nextEnumerator = new IntegerEnumerator(fixedValue(8));
-        nextEnumerator.advance();
-        nextEnumerator.advance();
-        IntegerEnumerator integerEnumerator = new IntegerEnumerator(fixedValue(8),  nextEnumerator);
-
-        assertThat(integerEnumerator.advance(), is(true));
-        assertThat(integerEnumerator.advance(), is(true));
-        assertThat(integerEnumerator.advance(), is(false));
-        assertThat(integerEnumerator.value(), is(0L));
-
-        assertThat(nextEnumerator.value(), is(2L)); // i.e. it is unchanged.
+    public void initialValueNotComputedUntilFirstRequested() throws Exception {
+        VariableValueSource variableValue = new VariableValueSource();
+        IntegerEnumerator integerEnumerator = new IntegerEnumerator(variableValue, fixedValue(5));
+        variableValue.value = 3;
+        assertThat(integerEnumerator.value(), is(3));
     }
-    
+
     @Test
-    public void advanceShouldBeLimitedByAllLimitingIntegerEnumeratorValue() throws Exception {
-        IntegerEnumerator nextEnumerator1 = new IntegerEnumerator(fixedValue(8));
-        nextEnumerator1.advance();
-        nextEnumerator1.advance();
-        nextEnumerator1.advance();
+    public void initialValueNotComputedUntilAdvanced() throws Exception {
+        VariableValueSource variableValue = new VariableValueSource();
+        IntegerEnumerator integerEnumerator = new IntegerEnumerator(variableValue, fixedValue(5));
+        variableValue.value = 3;
+        assertThat(integerEnumerator.advance(), is(true));
+        assertThat(integerEnumerator.value(), is(4));
+    }
 
-        IntegerEnumerator nextEnumerator2 = new IntegerEnumerator(fixedValue(8));
-        nextEnumerator2.advance();
-        nextEnumerator2.advance();
-
-        IntegerEnumerator integerEnumerator = new IntegerEnumerator(fixedValue(8),  nextEnumerator1, nextEnumerator2);
-
+    @Test
+    public void valueIsNotResetToMinimumUntilFirstNeeded() throws Exception {
+        VariableValueSource variableValue = new VariableValueSource();
+        IntegerEnumerator integerEnumerator = new IntegerEnumerator(variableValue, fixedValue(5));
+        variableValue.value = 3;
         assertThat(integerEnumerator.advance(), is(true));
         assertThat(integerEnumerator.advance(), is(true));
         assertThat(integerEnumerator.advance(), is(false));
-        assertThat(integerEnumerator.value(), is(0L));
+        variableValue.value = 2;
+        assertThat(integerEnumerator.value(), is(2));
+    }
 
+    private static class VariableValueSource implements ValueSource {
+
+        private Integer value;
+
+        public Integer value() {
+            return value;
+        }
     }
 }

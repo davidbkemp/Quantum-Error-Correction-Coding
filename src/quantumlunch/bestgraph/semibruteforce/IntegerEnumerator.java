@@ -1,35 +1,42 @@
 package quantumlunch.bestgraph.semibruteforce;
 
 class IntegerEnumerator implements StateEnumerator, ValueSource {
-    private final ValueSource[] upperLimits;
-    private long value = 0;
+    private final ValueSource minimumValue;
+    private final ValueSource upperLimit;
+    private int value;
+    private boolean valueRequiresReset = true;
 
-    public IntegerEnumerator(ValueSource... upperLimits) {
-        this.upperLimits = upperLimits;
+    public IntegerEnumerator(ValueSource minimumValue, ValueSource upperLimit) {
+        this.minimumValue = minimumValue;
+        this.upperLimit = upperLimit;
+    }
+
+    IntegerEnumerator(ValueSource upperLimit) {
+        this(FixedValueSource.ZERO, upperLimit);
     }
 
     public boolean advance() {
-        if (satisfiesAllLimits()) {
+        if (withinUpperLimit()) {
             value++;
             return true;
         }
-        value = 0;
+        valueRequiresReset = true;
         return false;
     }
 
-    public Long value() {
+    public Integer value() {
+        if (valueRequiresReset) {
+            value = minimumValue.value();
+            valueRequiresReset = false;
+        }
         return value;
     }
 
-    private boolean satisfiesAllLimits() {
-        if (upperLimits == null) return true;
-        for (ValueSource limitingEnumerator: upperLimits) {
-            if (limitingEnumerator != null && value >= limitingEnumerator.value()) return false;
-        }
-        return true;
+    private boolean withinUpperLimit() {
+        return (upperLimit == null || value()  < upperLimit.value());
     }
 
     public String toString() {
-        return "IntegerEnumerator[" + value + "]";
+        return "IntegerEnumerator[" + value() + "]";
     }
 }

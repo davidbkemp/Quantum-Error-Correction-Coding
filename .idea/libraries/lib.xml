@@ -4,6 +4,7 @@
       <root url="jar://$PROJECT_DIR$/lib/commons-lang-2.6.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib-test/junit-4.8.2.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib-test/mockito-all-1.8.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib-test/hamcrest-all-1.3.0RC2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
@@ -11,6 +12,12 @@
       <root url="jar://$PROJECT_DIR$/lib-test/mockito-1.8.5.zip!/" />
       <root url="jar://$PROJECT_DIR$/lib-test/junit4.8.2.zip!/junit4.8.2/temp.hamcrest.source" />
       <root url="jar://$PROJECT_DIR$/lib-test/junit4.8.2.zip!/junit4.8.2" />
+      <root url="jar://$PROJECT_DIR$/lib-test/hamcrest-1.3.0RC2.zip!/hamcrest-1.3.0RC2/hamcrest-examples/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/lib-test/hamcrest-1.3.0RC2.zip!/hamcrest-1.3.0RC2/hamcrest-generator/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/lib-test/hamcrest-1.3.0RC2.zip!/hamcrest-1.3.0RC2/hamcrest-core/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/lib-test/hamcrest-1.3.0RC2.zip!/hamcrest-1.3.0RC2/hamcrest-library/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/lib-test/hamcrest-1.3.0RC2.zip!/hamcrest-1.3.0RC2/hamcrest-unit-test/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/lib-test/hamcrest-1.3.0RC2.zip!/hamcrest-1.3.0RC2/hamcrest-integration/src/main/java" />
     </SOURCES>
   </library>
 </component>
