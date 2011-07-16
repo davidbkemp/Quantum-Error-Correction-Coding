@@ -1,6 +1,5 @@
 package quantumlunch.isomorphism;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import quantumlunch.QecGraph;
 
 import java.util.*;

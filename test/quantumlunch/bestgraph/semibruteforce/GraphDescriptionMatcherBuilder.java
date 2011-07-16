@@ -1,9 +1,6 @@
 package quantumlunch.bestgraph.semibruteforce;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hamcrest.Matcher;
-
-import java.util.Arrays;
 
 public class GraphDescriptionMatcherBuilder {
     private int size;

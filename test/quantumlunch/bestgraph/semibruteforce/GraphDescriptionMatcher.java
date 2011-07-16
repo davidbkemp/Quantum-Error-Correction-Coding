@@ -4,10 +4,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
-import javax.xml.transform.Result;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class GraphDescriptionMatcher extends TypeSafeMatcher<GraphDescription> {

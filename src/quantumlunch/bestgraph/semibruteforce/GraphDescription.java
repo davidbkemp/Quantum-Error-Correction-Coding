@@ -2,9 +2,11 @@ package quantumlunch.bestgraph.semibruteforce;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import quantumlunch.QecGraph;
+import quantumlunch.QecGraphBuilder;
 
-import java.util.Arrays;
+import java.util.List;
 
+import static quantumlunch.QecGraphBuilder.qecGraph;
 import static quantumlunch.bestgraph.semibruteforce.FixedValueSource.fixedValue;
 import static quantumlunch.bestgraph.semibruteforce.MinimumValueSource.minimumValue;
 
@@ -16,7 +18,7 @@ class GraphDescription {
     private final IntegerEnumerator[] numDownStreamBlackNeighboursEnumerators;
     private final EdgeEnumerator[] edgeEnumerators;
     private final StateEnumerator[][] allEnumerators;
-    private boolean finished = false;
+    private boolean rollingOver = false;
 
     public GraphDescription(int size, int minDistance) {
         this.size = size;
@@ -91,12 +93,13 @@ class GraphDescription {
     }
 
     public QecGraph next() {
-        if (finished) {
-            return null;
-        }
         QecGraph result = createGraph();
-        finished = !advance();
-        return result;
+        if (rollingOver) {
+            rollingOver = false;
+            return result;
+        }
+        rollingOver = !advance();
+        return rollingOver ? null : result;
     }
 
     private boolean advance() {
@@ -109,7 +112,18 @@ class GraphDescription {
     }
 
     private QecGraph createGraph() {
-        return null;  //To change body of created methods use File | Settings | File Templates.
+        QecGraphBuilder graphBuilder = qecGraph(size);
+        for (int node = 0; node < size; node++) {
+            if (colourEnumerators[node].value() == 1) graphBuilder.withBlackNodes(node);
+        }
+        for (int node = 0; node < size; node++) {
+            EdgeEnumerator edgeEnumerator = edgeEnumerators[node];
+            List<Integer> edges = edgeEnumerator.getEdges();
+            for (int otherNode: edges) {
+                graphBuilder.edge(node, otherNode);
+            }
+        }
+        return graphBuilder.build();
     }
 
     IntegerEnumerator[] getColourEnumerators() {

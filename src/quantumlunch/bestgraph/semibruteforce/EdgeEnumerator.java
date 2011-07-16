@@ -125,4 +125,15 @@ public class EdgeEnumerator implements StateEnumerator {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
+
+    public List<Integer> getEdges() {
+        List<Integer> edges = new ArrayList<Integer>();
+        for (IntegerEnumerator whiteNode : whiteNodeEnumerators) {
+            edges.add(whiteNode.value());
+        }
+        for (IntegerEnumerator blackNode : blackNodeEnumerators) {
+            edges.add(blackNode.value());
+        }
+        return edges;
+    }
 }
