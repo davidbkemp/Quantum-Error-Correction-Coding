@@ -51,8 +51,6 @@ public class GraphDescriptionTest {
         assertThat(graphDescription, graphDescriptionMatcher);
 
         assertThat(graphDescription.next(), nullValue());
-        assertThat(graphDescription, initialGraphExpectation);
-
         assertThat(graphDescription.next(), notNullValue());
         assertThat(graphDescription, initialGraphExpectation);
     }
@@ -228,12 +226,92 @@ public class GraphDescriptionTest {
                 .edges(new int[][]{{}, {0}, {0,1}}).build();
         assertThat(graphDescription, graphDescriptionMatcher);
 
-        graphDescription.next();
+        assertThat(graphDescription.next(), nullValue());
+        assertThat(graphDescription.next(), notNullValue());
         graphDescriptionMatcher = graphDescriptionMatcher().size(size).colours(0, 0, 0)
                 .downstreamNeighbours(0, 0, 0).downstreamBlackNeighbours(0, 0, 0)
                 .edges(new int[][]{{}, {}, {}}).build();
         assertThat(graphDescription, graphDescriptionMatcher);
     }
 
+    @Test
+    public void shouldUseMinDistanceToInitialize() throws Exception {
+        int size = 3;
+        GraphDescription graphDescription = new GraphDescription(size, 2);
 
+        Matcher<GraphDescription> initalExpectedGraph = graphDescriptionMatcher().size(size).colours(0, 1, 1)
+                .downstreamNeighbours(0, 0, 1).downstreamBlackNeighbours(0, 0, 0)
+                .edges(new int[][]{{}, {}, {0}}).build();
+        assertThat(graphDescription, initalExpectedGraph);
+
+        graphDescription.next();
+        Matcher<GraphDescription> graphDescriptionMatcher = graphDescriptionMatcher().size(size).colours(0, 1, 1)
+                .downstreamNeighbours(0, 0, 1).downstreamBlackNeighbours(0, 0, 1)
+                .edges(new int[][]{{}, {}, {1}}).build();
+        assertThat(graphDescription, graphDescriptionMatcher);
+
+        graphDescription.next();
+        graphDescriptionMatcher = graphDescriptionMatcher().size(size).colours(0, 1, 1)
+                .downstreamNeighbours(0, 1, 1).downstreamBlackNeighbours(0, 0, 0)
+                .edges(new int[][]{{}, {0}, {0}}).build();
+        assertThat(graphDescription, graphDescriptionMatcher);
+
+        graphDescription.next();
+        graphDescriptionMatcher = graphDescriptionMatcher().size(size).colours(0, 1, 1)
+                .downstreamNeighbours(0, 1, 1).downstreamBlackNeighbours(0, 0, 1)
+                .edges(new int[][]{{}, {0}, {1}}).build();
+        assertThat(graphDescription, graphDescriptionMatcher);
+
+        graphDescription.next();
+        graphDescriptionMatcher = graphDescriptionMatcher().size(size).colours(0, 1, 1)
+                .downstreamNeighbours(0, 0, 2).downstreamBlackNeighbours(0, 0, 1)
+                .edges(new int[][]{{}, {}, {0,1}}).build();
+        assertThat(graphDescription, graphDescriptionMatcher);
+
+        graphDescription.next();
+        graphDescriptionMatcher = graphDescriptionMatcher().size(size).colours(0, 1, 1)
+                .downstreamNeighbours(0, 1, 2).downstreamBlackNeighbours(0, 0, 1)
+                .edges(new int[][]{{}, {0}, {0,1}}).build();
+        assertThat(graphDescription, graphDescriptionMatcher);
+
+        graphDescription.next();
+        graphDescriptionMatcher = graphDescriptionMatcher().size(size).colours(1, 1, 1)
+                .downstreamNeighbours(0, 0, 1).downstreamBlackNeighbours(0, 0, 1)
+                .edges(new int[][]{{}, {}, {0}}).build();
+        assertThat(graphDescription, graphDescriptionMatcher);
+
+        graphDescription.next();
+        graphDescriptionMatcher = graphDescriptionMatcher().size(size).colours(1, 1, 1)
+                .downstreamNeighbours(0, 0, 1).downstreamBlackNeighbours(0, 0, 1)
+                .edges(new int[][]{{}, {}, {1}}).build();
+        assertThat(graphDescription, graphDescriptionMatcher);
+
+        graphDescription.next();
+        graphDescriptionMatcher = graphDescriptionMatcher().size(size).colours(1, 1, 1)
+                .downstreamNeighbours(0, 1, 1).downstreamBlackNeighbours(0, 1, 1)
+                .edges(new int[][]{{}, {0}, {0}}).build();
+        assertThat(graphDescription, graphDescriptionMatcher);
+
+        graphDescription.next();
+        graphDescriptionMatcher = graphDescriptionMatcher().size(size).colours(1, 1, 1)
+                .downstreamNeighbours(0, 1, 1).downstreamBlackNeighbours(0, 1, 1)
+                .edges(new int[][]{{}, {0}, {1}}).build();
+        assertThat(graphDescription, graphDescriptionMatcher);
+
+        graphDescription.next();
+        graphDescriptionMatcher = graphDescriptionMatcher().size(size).colours(1, 1, 1)
+                .downstreamNeighbours(0, 0, 2).downstreamBlackNeighbours(0, 0, 2)
+                .edges(new int[][]{{}, {}, {0,1}}).build();
+        assertThat(graphDescription, graphDescriptionMatcher);
+
+        graphDescription.next();
+        graphDescriptionMatcher = graphDescriptionMatcher().size(size).colours(1, 1, 1)
+                .downstreamNeighbours(0, 1, 2).downstreamBlackNeighbours(0, 1, 2)
+                .edges(new int[][]{{}, {0}, {0,1}}).build();
+        assertThat(graphDescription, graphDescriptionMatcher);
+
+        assertThat(graphDescription.next(), nullValue());
+        assertThat(graphDescription.next(), notNullValue());
+        assertThat(graphDescription, initalExpectedGraph);
+    }
 }

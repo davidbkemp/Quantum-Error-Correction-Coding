@@ -52,13 +52,13 @@ public class GraphDescriptionMatcher extends TypeSafeMatcher<GraphDescription> {
             }
             Integer actualNumDownStreamNeighbours = graphDescription.getNumDownStreamNeighboursEnumerators()[node].value();
             if (downstreamNeighbours[node] != actualNumDownStreamNeighbours) {
-                message =String.format("Graph whose node %s has downstreamNeighbours %s (got %s)",
+                message =String.format("Graph whose node %s has %s downstreamNeighbours (got %s)",
                         node, downstreamNeighbours[node], actualNumDownStreamNeighbours);
                 return false;
             }
             Integer actualNumDownstreamBlackNeighbours = graphDescription.getNumDownStreamBlackNeighboursEnumerators()[node].value();
             if (downstreamBlackNeighbours[node] != actualNumDownstreamBlackNeighbours) {
-                message = String.format("Graph whose node %s has downstreamBlackNeighbours %s (got %s)",
+                message = String.format("Graph whose node %s has %s downstreamBlackNeighbours (got %s)",
                         node, downstreamBlackNeighbours[node], actualNumDownstreamBlackNeighbours);
                 return false;
             }

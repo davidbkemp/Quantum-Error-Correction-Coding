@@ -7,6 +7,7 @@ import quantumlunch.QecGraphBuilder;
 import java.util.List;
 
 import static quantumlunch.QecGraphBuilder.qecGraph;
+import static quantumlunch.bestgraph.semibruteforce.FixedValueSource.ZERO;
 import static quantumlunch.bestgraph.semibruteforce.FixedValueSource.fixedValue;
 import static quantumlunch.bestgraph.semibruteforce.MinimumValueSource.minimumValue;
 
@@ -37,7 +38,11 @@ class GraphDescription {
 
     private void populateColourEnumerators() {
         IntegerEnumerator colourEnumerator = null;
-        for (int nodeNum = size - 1; nodeNum >= 0; nodeNum--) {
+        for (int nodeNum = size - 1; nodeNum > size - minDistance - 1; nodeNum--) {
+            colourEnumerator = new IntegerEnumerator(fixedValue(1), fixedValue(1));
+            colourEnumerators[nodeNum] = colourEnumerator;
+        }
+        for (int nodeNum = size - minDistance - 1; nodeNum >= 0; nodeNum--) {
             MinimumValueSource upperLimit = minimumValue(fixedValue(1), colourEnumerator);
             colourEnumerator = new IntegerEnumerator(upperLimit);
             colourEnumerators[nodeNum] = colourEnumerator;
@@ -46,9 +51,13 @@ class GraphDescription {
 
     private void populateNumDownStreamNeighboursEnumerators() {
         IntegerEnumerator numDownStreamNeighboursEnumerator = null;
+        int minDistanceEnforcedMinimumNumberOfDownstreamNeighbours = minDistance - 1;
         for (int nodeNum = size - 1; nodeNum >= 0; nodeNum--) {
-            MinimumValueSource upperLimit = minimumValue(fixedValue(nodeNum), numDownStreamNeighboursEnumerator);
-            numDownStreamNeighboursEnumerator = new IntegerEnumerator(upperLimit);
+            ValueSource upperLimit = minimumValue(fixedValue(nodeNum), numDownStreamNeighboursEnumerator);
+            ValueSource lowerLimit = minDistanceEnforcedMinimumNumberOfDownstreamNeighbours > 0 ?
+                    fixedValue(minDistanceEnforcedMinimumNumberOfDownstreamNeighbours) : ZERO;
+            minDistanceEnforcedMinimumNumberOfDownstreamNeighbours--;
+            numDownStreamNeighboursEnumerator = new IntegerEnumerator(lowerLimit, upperLimit);
             this.numDownStreamNeighboursEnumerators[nodeNum] = numDownStreamNeighboursEnumerator;
         }
     }
