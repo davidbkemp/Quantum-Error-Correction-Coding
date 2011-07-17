@@ -1,6 +1,6 @@
 package quantumlunch.bestgraph.semibruteforce;
 
-class IntegerEnumerator implements StateEnumerator, ValueSource {
+final class IntegerEnumerator implements StateEnumerator, ValueSource {
     private final ValueSource minimumValue;
     private final ValueSource upperLimit;
     private int value;

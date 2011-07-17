@@ -15,7 +15,13 @@ public class BestGraphFinder {
         try {
             int size = Integer.parseInt(args[0]);
             int minDistance = Integer.parseInt(args[1]);
-            System.out.println(new BestGraphFinder().findBestGraph(size, minDistance));
+            QecGraph bestGraph = new BestGraphFinder().findBestGraph(size, minDistance);
+            if (bestGraph == null) {
+                System.out.println(String.format("No graph found of size %s with min distance of %s", size, minDistance));
+            } else {
+                System.out.println("Found graph with size " + bestGraph.distance());
+                System.out.println(bestGraph);
+            }
 
         } catch (NumberFormatException e) {
             usage();
@@ -37,18 +43,14 @@ public class BestGraphFinder {
     public QecGraph findBestGraph(int size, int minDistance) {
         int bestDistance = minDistance - 1;
         QecGraph bestGraph = null;
-        Set<QecGraph> graphsTried = new HashSet<QecGraph>();
         GraphDescription graphDescription = new GraphDescription(size, minDistance);
         for (QecGraph graph = graphDescription.next(); graph != null; graph = graphDescription.next()) {
-            if (graphsTried.add(graph)) {
-                int distance = graph.distance(bestDistance);
-                if (distance > bestDistance) {
-                    bestDistance = distance;
-                    bestGraph = graph;
-                }
+            int distance = graph.distance(bestDistance);
+            if (distance > bestDistance) {
+                bestDistance = distance;
+                bestGraph = graph;
             }
         }
-
         return bestGraph;
     }
 }

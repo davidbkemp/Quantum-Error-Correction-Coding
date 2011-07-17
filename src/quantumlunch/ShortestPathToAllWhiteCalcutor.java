@@ -4,7 +4,7 @@ import quantumlunch.QecGraph.Operation;
 
 import java.util.*;
 
-public class ShortestPathToAllWhiteCalcutor {
+final class ShortestPathToAllWhiteCalcutor {
 
     public List<QecGraph> shortestPathToAllWhite(QecGraph start) {
         Map<QecGraph, List<QecGraph>> visitedGraphs = new HashMap<QecGraph, List<QecGraph>>();

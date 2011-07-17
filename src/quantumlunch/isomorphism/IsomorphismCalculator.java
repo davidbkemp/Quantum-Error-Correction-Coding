@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 // Not Thread safe.
-public class IsomorphismCalculator {
+public final class IsomorphismCalculator {
 
     private final QecGraph qecGraph;
     private final int size;

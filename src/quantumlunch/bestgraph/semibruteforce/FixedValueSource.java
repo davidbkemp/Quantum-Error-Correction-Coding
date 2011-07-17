@@ -1,6 +1,6 @@
 package quantumlunch.bestgraph.semibruteforce;
 
-class FixedValueSource implements ValueSource {
+final class FixedValueSource implements ValueSource {
     public static final ValueSource ZERO = fixedValue(0);
 
     private final Integer value;

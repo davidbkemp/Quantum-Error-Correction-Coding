@@ -1,5 +1,5 @@
 package quantumlunch.bestgraph.semibruteforce;
 
-public interface ValueSource {
+interface ValueSource {
     Integer value();
 }

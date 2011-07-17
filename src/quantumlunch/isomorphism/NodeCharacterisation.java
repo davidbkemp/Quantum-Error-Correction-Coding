@@ -1,6 +1,6 @@
 package quantumlunch.isomorphism;
 
-public class NodeCharacterisation {
+public final class NodeCharacterisation {
 
     private final boolean black;
     private final int numberOfWhiteNeighbours;

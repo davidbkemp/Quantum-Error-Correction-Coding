@@ -1,13 +1,14 @@
 package quantumlunch;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import quantumlunch.isomorphism.IsomorphismCalculator;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class QecGraph {
+public final class QecGraph {
 
     public static enum Operation {
         X, Y, Z
@@ -22,13 +23,12 @@ public class QecGraph {
     // First row is of length 0, last is of length size - 1.
     private final boolean[][] edges;
 
-    private final IsomorphismCalculator isomorphismCalculator;
+    private IsomorphismCalculator isomorphismCalculator;
 
     public QecGraph(int size, boolean[] blackNodes, boolean[][] edges) {
         this.size = size;
         this.blackNodes = blackNodes;
         this.edges = edges;
-        this.isomorphismCalculator = new IsomorphismCalculator(this);
     }
 
     public int getSize() {
@@ -58,7 +58,7 @@ public class QecGraph {
     }
     
     public boolean isomorphicTo(QecGraph rhs) {
-        return isomorphismCalculator.isomorphicTo(rhs.isomorphismCalculator);
+        return getIsomorphismCalculator().isomorphicTo(rhs.getIsomorphismCalculator());
     }
     
     public QecGraph transform(int node, Operation operation) {
@@ -111,7 +111,8 @@ public class QecGraph {
 
     @Override
     public int hashCode() {
-        return isomorphismCalculator.isomorphismHashCode();
+        return new HashCodeBuilder().append(blackNodes).append(edges).toHashCode();
+//        return getIsomorphismCalculator().isomorphismHashCode();
     }
 
     @Override
@@ -119,8 +120,8 @@ public class QecGraph {
         if (obj == this) return true;
         if (!(obj instanceof QecGraph)) return false;
         QecGraph rhs = (QecGraph) obj;
-        return new EqualsBuilder().append(blackNodes, rhs.blackNodes).append(edges, rhs.edges).isEquals()
-                || isomorphicTo(rhs);
+        return new EqualsBuilder().append(blackNodes, rhs.blackNodes).append(edges, rhs.edges).isEquals();
+//                || isomorphicTo(rhs);
     }
 
     @Override
@@ -192,6 +193,11 @@ public class QecGraph {
 
     private void toggleNode(int node, boolean[] newBlackNodes) {
         newBlackNodes[node] = !blackNodes[node];
+    }
+
+    private IsomorphismCalculator getIsomorphismCalculator() {
+        if (isomorphismCalculator == null) isomorphismCalculator = new IsomorphismCalculator(this);
+        return isomorphismCalculator;
     }
 
 }

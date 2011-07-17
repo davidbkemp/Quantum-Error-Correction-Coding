@@ -11,7 +11,7 @@ import static quantumlunch.bestgraph.semibruteforce.FixedValueSource.ZERO;
 import static quantumlunch.bestgraph.semibruteforce.FixedValueSource.fixedValue;
 import static quantumlunch.bestgraph.semibruteforce.MinimumValueSource.minimumValue;
 
-class GraphDescription {
+final class GraphDescription {
     private final int size;
     private final int minDistance;
     private final IntegerEnumerator[] colourEnumerators;

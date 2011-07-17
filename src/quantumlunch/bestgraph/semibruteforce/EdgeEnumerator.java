@@ -16,7 +16,7 @@ import static quantumlunch.bestgraph.semibruteforce.FixedValueSource.fixedValue;
  * At the point of roll over, the number of down stream black nodes, neighbours, and black neighbours may change, and hence
  * this enumerator is supplied with ValueSource objects for these instead of constants.
  */
-public class EdgeEnumerator implements StateEnumerator {
+final class EdgeEnumerator implements StateEnumerator {
     private final int nodeNum;
     private final int graphSize;
     private final ValueSource numDownStreamBlackNodesValueSource;

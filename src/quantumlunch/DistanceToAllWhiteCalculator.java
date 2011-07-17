@@ -4,7 +4,7 @@ import quantumlunch.QecGraph.Operation;
 
 import java.util.*;
 
-class DistanceToAllWhiteCalculator {
+final class DistanceToAllWhiteCalculator {
 
     public int distanceToAllWhite(QecGraph qecGraph) {
         Set<QecGraph> visitedGraphs = new HashSet<QecGraph>();

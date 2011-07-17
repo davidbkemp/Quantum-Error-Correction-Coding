@@ -1,6 +1,6 @@
 package quantumlunch.bestgraph.semibruteforce;
 
-public class MinimumValueSource implements ValueSource {
+final class MinimumValueSource implements ValueSource {
 
     public static MinimumValueSource minimumValue(ValueSource... values) {
         return new MinimumValueSource(values);

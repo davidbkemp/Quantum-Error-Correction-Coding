@@ -1,6 +1,6 @@
 package quantumlunch;
 
-public class QecGraphBuilder {
+public final class QecGraphBuilder {
 
     private final int size;
 
